@@ -20,9 +20,6 @@ public class Player : MonoBehaviour
     Vector2 input;
     Vector2 velocity;
 
-    int score;
-
-    public TextMeshProUGUI scoreText;
 
     private void Awake()
     {
@@ -59,14 +56,19 @@ public class Player : MonoBehaviour
         rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
     }
 
+
+
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
-        if (collision.CompareTag("Item"))
+        if (collision.CompareTag("Respawn"))
         {
-            score += collision.GetComponent<ItemObject>().GetPoint();
-            Destroy(collision.gameObject);
-            scoreText.text = score.ToString();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        if (collision.CompareTag("Finish"))
+        {
+            collision.GetComponent<LevelObject>().MoveTonextLevel();
         }
     }
 }
