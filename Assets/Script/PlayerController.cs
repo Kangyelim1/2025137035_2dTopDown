@@ -33,5 +33,32 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    private Rigidbody2D rb;
+    private Vector2 previousPosition;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    void FixedUpdate()
+    {
+        previousPosition = rb.position;
+        // 여기에 플레이어 이동 로직 구현 (예: 키 입력에 따른 velocity 변경)
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // 충돌한 오브젝트의 레이어가 "BlackTile"인지 확인
+        if (collision.gameObject.layer == LayerMask.NameToLayer("BlackTile"))
+        {
+            Debug.Log("검은색 타일에 부딪혔습니다!");
+            // 이동을 멈추는 방법
+            rb.velocity = Vector2.zero;
+            // 또는 이전 위치로 되돌리는 방법 (FixedUpdate에서 previousPosition을 업데이트해야 함)
+            rb.MovePosition(previousPosition);
+        }
+    }
+
 }
 
