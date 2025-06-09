@@ -10,7 +10,10 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"충돌 발생: {collision.gameObject.name}, 태그: {collision.gameObject.tag}");
+       if (collision.CompareTag("Respawn"))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
 
 
         if (collision.gameObject.CompareTag("Finish"))
