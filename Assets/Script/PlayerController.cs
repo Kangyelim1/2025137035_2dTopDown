@@ -9,9 +9,12 @@ public class PlayerController : MonoBehaviour
     private bool isGiant = false;
 
 
+    public bool hasKey = false; // 플레이어가 열쇠를 가지고 있는지 여부\
+
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-       if (collision.CompareTag("Respawn"))
+        if (collision.CompareTag("Respawn"))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
@@ -34,7 +37,7 @@ public class PlayerController : MonoBehaviour
                 Debug.LogWarning("경고: 'Finish' 태그를 가진 오브젝트에 LevelObject 컴포넌트가 없습니다. 다음 스테이지로 넘어갈 수 없습니다.");
             }
         }
-        
+
     }
 
     private Rigidbody2D rb;
@@ -43,6 +46,8 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        hasKey = false;
     }
 
     void FixedUpdate()
@@ -61,8 +66,18 @@ public class PlayerController : MonoBehaviour
             rb.velocity = Vector2.zero;
             // 또는 이전 위치로 되돌리는 방법 (FixedUpdate에서 previousPosition을 업데이트해야 함)
             rb.MovePosition(previousPosition);
+
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Key"))
+        {
+            hasKey = true; // 열쇠를 획득!
+            Debug.Log("열쇠를 획득했습니다!");
+            Destroy(other.gameObject); // 열쇠 오브젝트 제거
+        }
+    }
 }
 
