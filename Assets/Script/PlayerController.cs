@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     public bool hasKey = false; // 플레이어가 열쇠를 가지고 있는지 여부\
 
+    public float moveSpeed = 5f;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -48,12 +49,21 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         hasKey = false;
+
     }
 
     void FixedUpdate()
     {
         previousPosition = rb.position;
         // 여기에 플레이어 이동 로직 구현 (예: 키 입력에 따른 velocity 변경)
+    }
+
+    void Update()
+    {
+        float moveX = Input.GetAxis("Horizontal");
+        float moveY = Input.GetAxis("Vertical");
+        Vector2 movement = new Vector2(moveX, moveY);
+        rb.velocity = movement * moveSpeed;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -68,16 +78,9 @@ public class PlayerController : MonoBehaviour
             rb.MovePosition(previousPosition);
 
         }
+
+
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Key"))
-        {
-            hasKey = true; // 열쇠를 획득!
-            Debug.Log("열쇠를 획득했습니다!");
-            Destroy(other.gameObject); // 열쇠 오브젝트 제거
-        }
-    }
 }
 
