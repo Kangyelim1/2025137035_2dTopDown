@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
 
     public float moveSpeed = 5f;
 
+    float score;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Respawn"))
@@ -23,23 +25,14 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Finish"))
         {
-            Debug.Log("Finish 지점 도착! 다음 레벨로 이동 시도.");
-
-            LevelObject levelObject = collision.gameObject.GetComponent<LevelObject>();
-
-            // LevelObject 컴포넌트가 있는지 확인합니다.
-            if (levelObject != null)
-            {
-                levelObject.MoveTonextLevel();
-                Debug.Log("MoveToNextLevel() 호출 완료. 다음 씬으로 넘어갈 예정.");
-            }
-            else
-            {
-                Debug.LogWarning("경고: 'Finish' 태그를 가진 오브젝트에 LevelObject 컴포넌트가 없습니다. 다음 스테이지로 넘어갈 수 없습니다.");
-            }
+            //HighScore.TrySet(SceneManager.GetActiveScene().buildIndex, (int)score);
+            StageResultSaver.SaveStage(SceneManager.GetActiveScene().buildIndex, (int)score);
+            collision.GetComponent<LevelObject>().MoveTonextLevel();
         }
 
     }
+
+
 
     private Rigidbody2D rb;
     private Vector2 previousPosition;
@@ -65,22 +58,5 @@ public class PlayerController : MonoBehaviour
         Vector2 movement = new Vector2(moveX, moveY);
         rb.velocity = movement * moveSpeed;
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        // 충돌한 오브젝트의 레이어가 "BlackTile"인지 확인
-        if (collision.gameObject.layer == LayerMask.NameToLayer("BlackTile"))
-        {
-            Debug.Log("검은색 타일에 부딪혔습니다!");
-            // 이동을 멈추는 방법
-            rb.velocity = Vector2.zero;
-            // 또는 이전 위치로 되돌리는 방법 (FixedUpdate에서 previousPosition을 업데이트해야 함)
-            rb.MovePosition(previousPosition);
-
-        }
-
-
-    }
-
 }
 
